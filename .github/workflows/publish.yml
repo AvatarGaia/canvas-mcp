@@ -3,6 +3,11 @@ name: Publish to npm
 # 免 token 发布（npm trusted publishing / OIDC）
 # 前置：npmjs.com 该包 Settings → Trusted Publishing 填 publisher：
 #   GitHub Actions | Organization: AvatarGaia | Repository: canvas-mcp | Workflow: publish.yml
+#
+# ⚠️ 2026-09-13 踩坑记录：不要在 actions/setup-node 里设 registry-url ——
+#    它会生成 .npmrc（//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}），
+#    空 token 会**顶掉 OIDC**（npm 带着空 Bearer 去 PUT → 404 Not Found，
+#    看起来像"没配 trusted publisher"，其实是 OIDC 没被用上）。
 on:
   release:
     types: [published] # ← 正式发布**只**由 release tag 触发
@@ -18,29 +23,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 注意：不传 registry-url（避免生成带空 _authToken 的 .npmrc）
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
+
+      - name: Remove any auth token config (让 npm 走 OIDC)
+        run: |
+          rm -f "${NPM_CONFIG_USERCONFIG:-}" 2>/dev/null || true
+          npm config delete //registry.npmjs.org/:_authToken 2>/dev/null || true
+          npm config set registry https://registry.npmjs.org/
+          npm config list | sed -E 's/(_authToken=).*/\1***/' || true
 
       - name: Show version
         run: node -p "require('./package.json').name + '@' + require('./package.json').version"
 
-      - name: npm & node version
-        run: |
-          node -v
-          npm -v
-
       - name: OIDC availability check
         run: |
-          echo "ACTIONS_ID_TOKEN_REQUEST_URL set: $([ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ] && echo YES || echo NO)"
-          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN set: $([ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ] && echo YES || echo NO)"
-          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
-          echo "GITHUB_REF: $GITHUB_REF"
-          echo "event: $GITHUB_EVENT_NAME"
-
-      - name: npm whoami (should be anonymous / not authed)
-        run: npm whoami --registry=https://registry.npmjs.org/ || echo "(not logged in — expected; OIDC will authenticate on publish)"
+          echo "OIDC request url set: $([ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ] && echo YES || echo NO)"
+          node -v; npm -v
 
       # 手动触发 = 只打包，不发布
       - name: Pack only (manual / dry-run)
@@ -50,4 +51,6 @@ jobs:
       # 仅 release 事件才真正发布
       - name: Publish (release only)
         if: github.event_name == 'release'
-        run: npm publish --access public --loglevel verbose
+        env:
+          NODE_AUTH_TOKEN: ''
+        run: npm publish --access public
