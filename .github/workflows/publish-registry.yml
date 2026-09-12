@@ -1,0 +1,33 @@
+name: Publish to MCP Registry
+
+# 把 server.json 发布到官方 MCP Registry（registry.modelcontextprotocol.io）
+# 用 GitHub Actions OIDC 认证（github-oidc）→ 不需要任何长期 token
+# 命名空间 io.github.AvatarGaia/canvas-mcp 由本仓库身份自动验证
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install mcp-publisher
+        run: |
+          curl -sL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher --help | head -5
+
+      - name: Validate server.json
+        run: ./mcp-publisher validate
+
+      - name: Login (GitHub OIDC)
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish
+        run: ./mcp-publisher publish
