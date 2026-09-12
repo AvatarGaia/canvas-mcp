@@ -1,0 +1,53 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.AvatarGaia/canvas-mcp",
+  "description": "TeamAgent Canvas MCP：13 个工具（岗位/商品/主题/活动等），支持远程 streamable-http 与 stdio 马甲。",
+  "version": "0.1.0",
+  "websiteUrl": "https://agent.avatargaia.top",
+  "repository": {
+    "url": "https://github.com/AvatarGaia/canvas-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@avatargaia/canvas-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "named",
+          "name": "--url",
+          "valueHint": "https://agent.avatargaia.top/api/mcp/canvas",
+          "description": "TeamAgent Canvas MCP 端点",
+          "isRequired": true
+        },
+        {
+          "type": "named",
+          "name": "--token",
+          "valueHint": "ta_xxx",
+          "description": "平台 token（ta_ 全权 / dk_ 开发者 Key）",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://agent.avatargaia.top/api/mcp/canvas",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer <ta_ 或 dk_>（联系 octopus@arplus.top 开通）",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
