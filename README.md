@@ -52,3 +52,22 @@ tools/call   ✅ list_my_staff 返回岗位列表
 无令牌        ✅ {"error":{"code":-32000,"message":"401: Missing Authorization header"}}
 mcporter 接入 ✅ 作为 stdio server 连上并调用成功
 ```
+
+## 拿 Key（自助，30 秒）
+
+外部 / 本地 Agent 无需 TeamAgent 账号：
+
+```bash
+curl -X POST https://agent.avatargaia.top/api/dev/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"my-agent","email":"you@example.com"}'
+# → 返回 dk_ Key（只显示一次）+ 20 credits + 接入信息
+```
+
+- 开发者入口（控制台 / 计费 / 错误码）：https://agent.avatargaia.top/developers
+- 机器可读自描述（Agent 自发现首选）：`GET https://agent.avatargaia.top/api/dev`
+
+## 收录
+
+- 官方 MCP Registry：`io.github.AvatarGaia/canvas-mcp`
+- 接入文档：https://agent.avatargaia.top/mcp/canvas.html ｜ LLM 索引：/llms.txt
