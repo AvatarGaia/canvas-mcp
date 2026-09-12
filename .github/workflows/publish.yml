@@ -1,21 +1,16 @@
 name: Publish to npm
 
 # 免 token 发布（npm trusted publishing / OIDC）
-# 前置：在 npmjs.com 该包 Settings → Trusted Publishing 里配置
-#   Publisher: GitHub Actions | Organization: AvatarGaia | Repository: canvas-mcp | Workflow: publish.yml
+# 前置：npmjs.com 该包 Settings → Trusted Publishing 里填 publisher：
+#   GitHub Actions | Organization: AvatarGaia | Repository: canvas-mcp | Workflow: publish.yml
 on:
   release:
-    types: [published]
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: '只打包不发布'
-        type: boolean
-        default: false
+    types: [published] # ← 正式发布**只**由 release tag 触发
+  workflow_dispatch: # 手动触发仅用于打包自检（dry-run），不发布
 
 permissions:
   contents: read
-  id-token: write # OIDC，npm 用它与 npmjs 交换发布凭证
+  id-token: write # OIDC：npm 用它与 registry 交换一次性发布凭证（无长期 token）
 
 jobs:
   publish:
@@ -31,10 +26,12 @@ jobs:
       - name: Show version
         run: node -p "require('./package.json').name + '@' + require('./package.json').version"
 
-      - name: Pack (dry run)
-        if: ${{ github.event.inputs.dry_run == 'true' }}
+      # 手动触发 = 只打包，不发布
+      - name: Pack only (manual / dry-run)
+        if: github.event_name == 'workflow_dispatch'
         run: npm pack --dry-run
 
-      - name: Publish
-        if: ${{ github.event.inputs.dry_run != 'true' }}
+      # 仅 release 事件才真正发布
+      - name: Publish (release only)
+        if: github.event_name == 'release'
         run: npm publish --access public
