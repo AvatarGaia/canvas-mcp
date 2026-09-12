@@ -1,12 +1,12 @@
 name: Publish to npm
 
 # 免 token 发布（npm trusted publishing / OIDC）
-# 前置：npmjs.com 该包 Settings → Trusted Publishing 里填 publisher：
+# 前置：npmjs.com 该包 Settings → Trusted Publishing 填 publisher：
 #   GitHub Actions | Organization: AvatarGaia | Repository: canvas-mcp | Workflow: publish.yml
 on:
   release:
     types: [published] # ← 正式发布**只**由 release tag 触发
-  workflow_dispatch: # 手动触发仅用于打包自检（dry-run），不发布
+  workflow_dispatch: # 手动触发：只做 OIDC 自检 + 打包 dry-run，不发布
 
 permissions:
   contents: read
@@ -26,6 +26,22 @@ jobs:
       - name: Show version
         run: node -p "require('./package.json').name + '@' + require('./package.json').version"
 
+      - name: npm & node version
+        run: |
+          node -v
+          npm -v
+
+      - name: OIDC availability check
+        run: |
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL set: $([ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ] && echo YES || echo NO)"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN set: $([ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ] && echo YES || echo NO)"
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_REF: $GITHUB_REF"
+          echo "event: $GITHUB_EVENT_NAME"
+
+      - name: npm whoami (should be anonymous / not authed)
+        run: npm whoami --registry=https://registry.npmjs.org/ || echo "(not logged in — expected; OIDC will authenticate on publish)"
+
       # 手动触发 = 只打包，不发布
       - name: Pack only (manual / dry-run)
         if: github.event_name == 'workflow_dispatch'
@@ -34,4 +50,4 @@ jobs:
       # 仅 release 事件才真正发布
       - name: Publish (release only)
         if: github.event_name == 'release'
-        run: npm publish --access public
+        run: npm publish --access public --loglevel verbose
