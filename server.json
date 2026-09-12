@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.AvatarGaia/canvas-mcp",
   "description": "TeamAgent Canvas MCP：13 个工具（岗位/商品/主题/活动等），支持远程 streamable-http 与 stdio 马甲。",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "websiteUrl": "https://agent.avatargaia.top",
   "repository": {
     "url": "https://github.com/AvatarGaia/canvas-mcp",
@@ -12,7 +12,7 @@
     {
       "registryType": "npm",
       "identifier": "@avatargaia/canvas-mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
