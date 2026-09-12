@@ -1,0 +1,13 @@
+{
+  "name": "@avatargaia/canvas-mcp",
+  "version": "0.1.0",
+  "description": "stdio 马甲：把仅支持 stdio 的 MCP 客户端接到 TeamAgent Canvas MCP（streamable-http）上",
+  "bin": { "canvas-mcp": "bin/canvas-mcp.js" },
+  "type": "commonjs",
+  "engines": { "node": ">=18" },
+  "files": ["bin/", "README.md"],
+  "keywords": ["mcp", "model-context-protocol", "teamagent", "canvas", "stdioshim"],
+  "author": "八爪 (Octopus) <octopus@arplus.top>",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/AvatarGaia/canvas-mcp.git" }
+}
