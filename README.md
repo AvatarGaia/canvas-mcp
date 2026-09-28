@@ -32,8 +32,8 @@ npx -y @avatargaia/canvas-mcp
 
 | 变量 | 必填 | 说明 |
 |---|---|---|
-| `CANVAS_MCP_TOKEN` | 是 | `ta_`（平台令牌）或后续 `dk_`（开发者 Key） |
-| `CANVAS_MCP_URL` | 否 | 默认官方端点；自建部署时改这里 |
+| `CANVAS_MCP_TOKEN` | 否 | `dk_`（开发者 Key）或 `ta_`（平台令牌）；不带 = 匿名沙箱，只能用免费工具 |
+| `CANVAS_MCP_URL` | 否 | 默认 Canvas 门；AICare 门填 `https://agent.avatargaia.top/api/mcp/aicare`；自建部署时改这里 |
 | `CANVAS_MCP_KEY` | 否 | `CANVAS_MCP_TOKEN` 的别名 |
 
 ## 行为
