@@ -1,7 +1,16 @@
 # @avatargaia/canvas-mcp
 
-**stdio 马甲**：让只支持 stdio 的 MCP 客户端（Claude Desktop / Cursor / 各类本地 Agent）接入 TeamAgent 的 Canvas MCP（`streamable-http`）。
+**stdio 马甲**：让只支持 stdio 的 MCP 客户端（Claude Desktop / Cursor / Cline / 各类本地 Agent）接入 TeamAgent 的 MCP 服务器（`streamable-http`）。
 纯转调，无状态、不缓存、不改写请求。
+
+两个门，同一把 Key：
+
+| 门 | 端点 | 工具 | 鉴权 |
+|---|---|---|---|
+| Canvas | `https://agent.avatargaia.top/api/mcp/canvas` | 13 个（岗位/动作/异步任务/统计） | **可不带 Key**：匿名沙箱开放免费工具；带 `dk_`/`ta_` 解锁全部 |
+| AICare | `https://agent.avatargaia.top/api/mcp/aicare` | 7 个（AI 健康检测 13 类：舌苔/面部/指甲…） | 必须带 Key，按次计费 |
+
+自动安装说明（给 Agent 读）：[`llms-install.md`](./llms-install.md) ｜ 隐私政策与支持：https://agent.avatargaia.top/privacy
 
 ## 用
 
@@ -18,11 +27,7 @@ npx -y @avatargaia/canvas-mcp
   "mcpServers": {
     "teamagent-canvas": {
       "command": "npx",
-      "args": ["-y", "@avatargaia/canvas-mcp"],
-      "env": {
-        "CANVAS_MCP_URL": "https://agent.avatargaia.top/api/mcp/canvas",
-        "CANVAS_MCP_TOKEN": "ta_xxxxxxxx"
-      }
+      "args": ["-y", "@avatargaia/canvas-mcp", "--token", "dk_xxxxxxxx"]
     }
   }
 }
@@ -66,6 +71,10 @@ curl -X POST https://agent.avatargaia.top/api/dev/register \
 
 - 开发者入口（控制台 / 计费 / 错误码）：https://agent.avatargaia.top/developers
 - 机器可读自描述（Agent 自发现首选）：`GET https://agent.avatargaia.top/api/dev`
+
+## 工具注解
+
+每个工具都带 MCP `annotations`（`readOnlyHint` / `destructiveHint` / `idempotentHint` / `openWorldHint`），付费工具在描述里写明 credit 数，客户端可据此做二次确认。
 
 ## 收录
 
