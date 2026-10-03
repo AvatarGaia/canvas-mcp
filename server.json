@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.AvatarGaia/canvas-mcp",
-  "description": "TeamAgent Canvas MCP（服务端 0.4.0）：91 个工具（岗位类 18 + 协作类 73）——开岗、改配置、跑动作、看会话与数据、推屏，并可为数字员工发布与配知识库。可匿名试用沙箱，带 Key 解锁全部。",
+  "description": "TeamAgent Canvas MCP（服务端 0.4.0）：91 个工具——开岗、改配置、跑动作、看数据、发布并配知识库。可匿名试用，带 Key 解锁全部。",
   "version": "0.1.4",
   "websiteUrl": "https://agent.avatargaia.top",
   "repository": {
