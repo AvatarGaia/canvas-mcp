@@ -7,7 +7,7 @@
 
 | 门 | 端点 | 工具 | 鉴权 |
 |---|---|---|---|
-| Canvas | `https://agent.avatargaia.top/api/mcp/canvas` | **91 个**（岗位类 18 + 协作类 73），服务端 0.4.0 | **可不带 Key**：匿名沙箱开放免费工具；带 `dk_`/`ta_` 解锁全部 |
+| Canvas | `https://agent.avatargaia.top/api/mcp/canvas` | 带 Key **97 个**；匿名沙箱 18 个免费工具 | **可不带 Key**：匿名沙箱开放免费工具；带 `dk_`/`ta_` 解锁全部 |
 | AICare | `https://agent.avatargaia.top/api/mcp/aicare` | 7 个（AI 健康检测 13 类：舌苔/面部/指甲…） | 必须带 Key，按次计费 |
 
 自动安装说明（给 Agent 读）：[`llms-install.md`](./llms-install.md) ｜ 隐私政策与支持：https://agent.avatargaia.top/privacy
